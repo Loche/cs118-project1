@@ -75,6 +75,7 @@ int main (int argc, char *argv[])
 
 			while(bytesSent != 0)
 			{
+				memset(incoming, 0, sizeof incoming);
 				bytesSent = recv(new_fd, incoming, sizeof incoming, 0);
 				cout << "Received: " << incoming << endl;
 				cout << "Number of bytes: " << bytesSent << endl;
@@ -82,16 +83,12 @@ int main (int argc, char *argv[])
 				try
 				{
 					req.ParseRequest(incoming, bytesSent);
+					cout << "\tHost: " << req.GetHost() << endl;
+					cout << "\tHeader \"Header\": " << req.FindHeader("Header") << endl;
 				}
 				catch (ParseException& e)
 				{
-					cout << "Exception: " << e.what() << endl;
-				}
-
-				if(req.GetTotalLength() > 0)
-				{
-					cout << "\tHost: " << req.GetHost() << endl;
-					cout << "\tHeader \"Header\": " << req.FindHeader("Header") << endl;
+					cout << "Exception caught: " << e.what() << endl;
 				}
 
 				if(bytesSent == 2)
